@@ -55,10 +55,10 @@ export default function App() {
         {userToken === null ? (
           // No token found, user isn't signed in
           <>
-            <Stack.Screen name="SignIn">
+            <Stack.Screen name="SignIn" options={{ headerShown: false }}>
               {() => <SignInScreen setToken={setToken} />}
             </Stack.Screen>
-            <Stack.Screen name="SignUp">
+            <Stack.Screen name="SignUp" options={{ headerShown: false }}>
               {() => <SignUpScreen setToken={setToken} />}
             </Stack.Screen>
           </>
@@ -77,9 +77,7 @@ export default function App() {
                   name="TabHome"
                   options={{
                     tabBarLabel: "Home",
-                    tabBarIcon: ({ color, size }) => (
-                      <Ionicons name={"ios-home"} size={size} color={color} />
-                    ),
+                    tabBarIcon: ({ color, size }) => <Ionicons name={"ios-home"} size={size} color={color} />,
                   }}
                 >
                   {() => (
@@ -111,11 +109,7 @@ export default function App() {
                   options={{
                     tabBarLabel: "Settings",
                     tabBarIcon: ({ color, size }) => (
-                      <Ionicons
-                        name={"ios-options"}
-                        size={size}
-                        color={color}
-                      />
+                      <Ionicons name={"ios-options"} size={size} color={color} />
                     ),
                   }}
                 >
