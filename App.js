@@ -11,6 +11,10 @@ import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
 
+import { useHeaderHeight } from "@react-navigation/elements";
+import { Image, ActivityIndicator, View } from "react-native";
+import RoomScreen from "./containers/RoomScreen";
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +50,22 @@ export default function App() {
 
   if (isLoading === true) {
     // We haven't finished checking for the token yet
-    return null;
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" color="#F9585E" />
+      </View>
+    );
+  }
+
+  function LogoTitle() {
+    return (
+      <Image
+        // style={{ width: useHeaderHeight(), height: useHeaderHeight() }}
+        style={{ width: 25, height: 25 }}
+        source={require("./assets/img/logo.png")}
+        resizeMode="contain"
+      />
+    );
   }
 
   return (
@@ -85,12 +104,25 @@ export default function App() {
                       <Stack.Screen
                         name="Home"
                         options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "red" },
-                          headerTitleStyle: { color: "white" },
+                          title: "Home",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          headerTitleAlign: "center",
                         }}
                       >
-                        {() => <HomeScreen />}
+                        {(props) => <HomeScreen {...props} />}
+                      </Stack.Screen>
+
+                      <Stack.Screen
+                        name="Room"
+                        options={{
+                          title: "Room Page",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          headerTitleAlign: "center",
+                        }}
+                      >
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
 
                       <Stack.Screen
