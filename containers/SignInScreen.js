@@ -16,7 +16,7 @@ import axios from "axios";
 import { useState } from "react";
 import Constants from "expo-constants";
 
-export default function SignInScreen({ setToken }) {
+export default function SignInScreen({ setSession }) {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ export default function SignInScreen({ setToken }) {
 
   const handleSignin = async (event) => {
     setIsSending(true);
-    console.log("YEAH");
+
     event.preventDefault();
     if (!email || !password) {
       setSigninError("Please fill all fields");
@@ -39,7 +39,7 @@ export default function SignInScreen({ setToken }) {
           email: email,
           password: password,
         });
-        setToken(response.data.token);
+        setSession(response.data.token, response.data.id);
       } catch (error) {
         if (error.response.status === 400) {
           setSigninError("Missing parameters");

@@ -1,21 +1,18 @@
 import {
   Dimensions,
-  FlatList,
   ActivityIndicator,
   ScrollView,
-  SafeAreaView,
   Text,
-  TextInput,
   View,
   TouchableOpacity,
   Image,
   StyleSheet,
-  Button,
-  ImageBackground,
 } from "react-native";
 
-import { SwiperFlatList } from "react-native-swiper-flatlist";
+import * as Location from "expo-location";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
+import { SwiperFlatList } from "react-native-swiper-flatlist";
 import RatingStars from "../components/RatingStars";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -26,8 +23,6 @@ export default function RoomScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState();
   const [descriptionShowMore, setDescriptionShowMore] = useState(false);
-
-  //   const ScreenWi = Dimensions.get("window").height;
 
   useEffect(() => {
     try {
@@ -90,6 +85,24 @@ export default function RoomScreen({ navigation, route }) {
           <FontAwesome name={descriptionShowMore ? "caret-up" : "caret-down"} size={20} color="#717171" />
         </TouchableOpacity>
       </View>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: data.location[1],
+          longitude: data.location[0],
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+        // showsUserLocation={true}
+        style={styles.map}
+      >
+        <MapView.Marker
+          coordinate={{
+            latitude: data.location[1],
+            longitude: data.location[0],
+          }}
+        />
+      </MapView>
     </ScrollView>
   );
 }
@@ -178,5 +191,11 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     paddingLeft: 0,
     marginRight: 5,
+  },
+
+  //MAP
+  map: {
+    height: 400,
+    width: "100%",
   },
 });

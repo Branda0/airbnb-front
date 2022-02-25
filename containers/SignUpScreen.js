@@ -16,7 +16,7 @@ import axios from "axios";
 import { useState } from "react";
 import Constants from "expo-constants";
 
-export default function SignUpScreen({ setToken }) {
+export default function SignUpScreen({ setSession }) {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
@@ -46,10 +46,8 @@ export default function SignUpScreen({ setToken }) {
           description: description,
           password: password,
         });
-        console.log(response.data);
-        setToken(response.data.token);
+        setSession(response.data.token, response.data.id);
       } catch (error) {
-        console.log(error);
         if (error.response.status === 400) {
           setSignupError("Account already exists");
         } else {

@@ -95,18 +95,17 @@ const styles = StyleSheet.create({
   roomImg: {
     width: "100%",
     height: 200,
+    justifyContent: "flex-end",
   },
   priceTag: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: "black",
     color: "#FFFFFF",
     fontSize: 25,
-    // height: "20%",
-    position: "absolute",
-    bottom: "6%",
-    left: 0,
+    width: 110,
     textAlign: "center",
+    marginBottom: 10,
   },
 
   //BOTTOM BANNER OF CARD - TITLE + RATING + USERPHOTO

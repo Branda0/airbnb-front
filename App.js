@@ -3,8 +3,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
+
 import HomeScreen from "./containers/HomeScreen";
+import AroundMeScreen from "./containers/AroundMeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
@@ -21,15 +23,19 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const [userId, setUserId] = useState(null);
 
-  const setToken = async (token) => {
+  const setSession = async (token, id) => {
     if (token) {
       await AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem("userId", id);
     } else {
       await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userId");
     }
 
     setUserToken(token);
+    setUserId(id);
   };
 
   useEffect(() => {
@@ -75,10 +81,10 @@ export default function App() {
           // No token found, user isn't signed in
           <>
             <Stack.Screen name="SignIn" options={{ headerShown: false }}>
-              {() => <SignInScreen setToken={setToken} />}
+              {() => <SignInScreen setSession={setSession} />}
             </Stack.Screen>
             <Stack.Screen name="SignUp" options={{ headerShown: false }}>
-              {() => <SignUpScreen setToken={setToken} />}
+              {() => <SignUpScreen setSession={setSession} />}
             </Stack.Screen>
           </>
         ) : (
@@ -118,42 +124,87 @@ export default function App() {
                         options={{
                           title: "Room Page",
                           headerStyle: { backgroundColor: "white" },
-                          headerTitle: (props) => <LogoTitle {...props} />,
+                          headerTitle: () => (
+                            <Image
+                              style={{ width: 25, height: 25 }}
+                              source={require("./assets/img/logo.png")}
+                              resizeMode="contain"
+                            />
+                          ),
                           headerTitleAlign: "center",
                         }}
                       >
                         {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
 
-                      <Stack.Screen
+                      {/* <Stack.Screen
                         name="Profile"
                         options={{
                           title: "User Profile",
                         }}
                       >
                         {() => <ProfileScreen />}
-                      </Stack.Screen>
+                      </Stack.Screen> */}
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+
                 <Tab.Screen
-                  name="TabSettings"
+                  name="TabAroundMe"
                   options={{
-                    tabBarLabel: "Settings",
+                    tabBarLabel: "Around me",
                     tabBarIcon: ({ color, size }) => (
-                      <Ionicons name={"ios-options"} size={size} color={color} />
+                      <Ionicons name="ios-location-sharp" size={size} color={color} />
                     ),
                   }}
                 >
                   {() => (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="Settings"
+                        name="AroundMe"
                         options={{
-                          title: "Settings",
+                          title: "Around Me",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          headerTitleAlign: "center",
                         }}
                       >
-                        {() => <SettingsScreen setToken={setToken} />}
+                        {(props) => <AroundMeScreen {...props} />}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="RoomFromMap"
+                        options={{
+                          title: "Room Page",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          headerTitleAlign: "center",
+                        }}
+                      >
+                        {(props) => <RoomScreen {...props} />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+
+                <Tab.Screen
+                  name="TabProfile"
+                  options={{
+                    tabBarLabel: "My profile",
+                    tabBarIcon: ({ color, size }) => <Feather name="user" size={size} color={color} />,
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="Profile"
+                        options={{
+                          title: "My Profile",
+                          headerStyle: { backgroundColor: "white" },
+                          headerTitle: (props) => <LogoTitle {...props} />,
+                          headerTitleAlign: "center",
+                        }}
+                      >
+                        {() => <ProfileScreen setSession={setSession} userId={userId} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
